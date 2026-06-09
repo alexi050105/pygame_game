@@ -1,10 +1,6 @@
-import pygame
+# Plik: main.py
+from Game.Game import Game
 
-from Player import *
-
-from DefaultParameters import *
-
-from Game import *
-
-game = Game()
-game.run()
+if __name__ == "__main__":
+    game = Game()
+    game.run()
