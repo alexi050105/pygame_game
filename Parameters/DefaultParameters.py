@@ -33,7 +33,7 @@ default_healthpack_heal = 30
 default_healthpack_lifetime = 300
 default_healthpack_interval = 300
 
-# Separacja przeciwników
+# Separacja przeciwnikow
 default_separation_iterations = 3
 default_separation_divisor = 4
 
@@ -43,7 +43,7 @@ default_hud_bar_y = 40
 default_hud_bar_width = 200
 default_hud_bar_height = 18
 
-# Dźwięki
+# Dzwieki
 default_volume_shoot = 0.3
 default_volume_explosion = 0.5
 default_volume_hit = 0.5

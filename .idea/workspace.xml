@@ -6,24 +6,18 @@
   <component name="ChangeListManager">
     <list default="true" id="6d6245e8-d07b-446f-9eb0-13bdbc832921" name="Changes" comment="main">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Entities/ArmoredEnemy.py" beforeDir="false" afterPath="$PROJECT_DIR$/Entities/ArmoredEnemy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Entities/ArmoredEnemy.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Entities/Bullet.py" beforeDir="false" afterPath="$PROJECT_DIR$/Entities/Bullet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Entities/Enemy.py" beforeDir="false" afterPath="$PROJECT_DIR$/Entities/Enemy.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Entities/EnemyDecorator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Entities/EnemyDecorator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Entities/FastEnemy.py" beforeDir="false" afterPath="$PROJECT_DIR$/Entities/FastEnemy.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Entities/Person.py" beforeDir="false" afterPath="$PROJECT_DIR$/Entities/Person.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Entities/Player.py" beforeDir="false" afterPath="$PROJECT_DIR$/Entities/Player.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/Game.py" beforeDir="false" afterPath="$PROJECT_DIR$/Game/Game.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Parameters/DefaultParameters.py" beforeDir="false" afterPath="$PROJECT_DIR$/Parameters/DefaultParameters.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Parameters/Imports.py" beforeDir="false" afterPath="$PROJECT_DIR$/Parameters/Imports.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/States/GameOverState.py" beforeDir="false" afterPath="$PROJECT_DIR$/States/GameOverState.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/States/GameplayState.py" beforeDir="false" afterPath="$PROJECT_DIR$/States/GamePlayState.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/States/GamePlayState.py" beforeDir="false" afterPath="$PROJECT_DIR$/States/GamePlayState.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/States/GameState.py" beforeDir="false" afterPath="$PROJECT_DIR$/States/GameState.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/States/MenuState.py" beforeDir="false" afterPath="$PROJECT_DIR$/States/MenuState.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/States/WaveTransitionState.py" beforeDir="false" afterPath="$PROJECT_DIR$/States/WaveTransitionState.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/enemy_left.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/enemy_right.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/player_left.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/player_right.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,11 +59,11 @@
       <recent name="C:\Users\aleks\PycharmProjects\gameProject" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\aleks\PycharmProjects\gameProject\Entities\Enemy" />
+      <recent name="C:\Users\aleks\PycharmProjects\gameProject" />
       <recent name="C:\Users\aleks\PycharmProjects\gameProject\Game" />
       <recent name="C:\Users\aleks\PycharmProjects\gameProject\Parameters" />
       <recent name="C:\Users\aleks\PycharmProjects\gameProject\States" />
-      <recent name="C:\Users\aleks\PycharmProjects\gameProject\Entities" />
-      <recent name="C:\Users\aleks\PycharmProjects\gameProject" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
