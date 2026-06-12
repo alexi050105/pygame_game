@@ -4,6 +4,7 @@ from Entities.Player import Player
 from States.MenuState import MenuState
 from States.GameState import GameState
 
+
 class Game:
     def __init__(self) -> None:
         pygame.init()
@@ -14,6 +15,11 @@ class Game:
 
         # Wywołujemy ładowanie grafik z pliku agregującego
         load_all_game_images()
+        load_all_game_sounds()
+
+        pygame.mixer.music.load("sounds/happy_adventure.mp3")
+        pygame.mixer.music.set_volume(0.6)
+        pygame.mixer.music.play(-1)  # -1 = zapętlenie
 
         self.bullets_group: pygame.sprite.Group = pygame.sprite.Group()
         self.enemies_group: pygame.sprite.Group = pygame.sprite.Group()
@@ -24,6 +30,10 @@ class Game:
             Player("Player", default_HP, default_starting_position,
                    default_player_damage, default_player_speed, self.bullets_group)
         )
+
+        self.healthpacks_group: pygame.sprite.Group = pygame.sprite.Group()
+        self.healthpacks_timer: int = 0
+        self.healthpacks_interval: int = default_fps * 5
 
         self.current_wave: int = 1
         self.kills_in_wave: int = 0

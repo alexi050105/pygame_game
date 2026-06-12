@@ -7,10 +7,13 @@ class WaveTransitionState(GameState):
 
         super().__init__(manager)
 
+        import Parameters.Imports as assets
+        assets.SOUNDS["wave"].play()
+
         self.timer: int = default_fps * 2
 
         FONT = pygame.font.Font(default_font, default_font_size)
-        self.text_surf = FONT.render(f"Fala {wave_number}!", False, "White")
+        self.text_surf = FONT.render(f"Wave {wave_number}!", False, "White")
         self.text_rect = self.text_surf.get_rect(
             center = (default_width / 2, default_height / 2)
         )
@@ -19,7 +22,7 @@ class WaveTransitionState(GameState):
         pass
 
     def update(self) -> None:
-        from States.GameplayState import GameplayState
+        from States.GamePlayState import GamePlayState
 
         self.timer -= 1
 
@@ -27,7 +30,12 @@ class WaveTransitionState(GameState):
 
             self.manager.enemies_group.empty()
             self.manager.bullets_group.empty()
-            self.manager.change_state(GameplayState(self.manager))
+
+            player = self.manager.player_group.sprite
+            if player:
+                player.rect.center = (default_width / 2, default_height / 2)
+
+            self.manager.change_state(GamePlayState(self.manager))
 
     def draw(self) -> None:
         self.manager.screen.fill("Black")

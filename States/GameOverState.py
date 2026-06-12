@@ -8,6 +8,10 @@ class GameOverState(GameState):
 
         super().__init__(manager)
 
+        import Parameters.Imports as assets
+        assets.SOUNDS["game_over"].play()
+        pygame.mixer.music.stop()
+
         FONT = pygame.font.Font(default_font, default_font_size)
 
         FONT_SMALL = pygame.font.Font(default_font, 28)
@@ -18,14 +22,14 @@ class GameOverState(GameState):
         )
 
         wave = self.manager.current_wave
-        self.into_surf = FONT_SMALL.render("You've reached wave: {wave}", False, "White")
+        self.into_surf = FONT_SMALL.render(f"You've reached wave:  {self.manager.current_wave}", False, "White")
         self.into_rect = self.into_surf.get_rect(
-            center = (default_width / 2, default_height / 2 + 20)
+            center = (default_width / 2, default_height / 2 + 30)
         )
 
-        self.hint_surf = FONT_SMALL.render("ESC = MENU", False, "Gray")
+        self.hint_surf = FONT_SMALL.render("PRESS ESC TO TRY AGAIN", False, "Gray")
         self.hint_rect = self.hint_surf.get_rect(
-            center = (default_width / 2, default_height / 2 + 70)
+            center = (default_width / 2, default_height / 2 + 80)
         )
 
     def handle_event(self, events: List[pygame.event.Event]) -> None:
@@ -34,17 +38,24 @@ class GameOverState(GameState):
         for event in events:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
 
-                self.manager.current_wave = 1
-                self.manager.kills_in_wave = 0
-                self.manager.enemies_to_kill = 5
-                self.manager.enemies_max_count = 3
+                self.manager.current_wave = default_starting_wave
+                self.manager.kills_in_wave = default_starting_kills
+                self.manager.enemies_to_kill = default_starting_enemies_to_kill
+                self.manager.enemies_max_count = default_starting_enemies_max_count
                 self.manager.enemies_group.empty()
                 self.manager.bullets_group.empty()
+                self.manager.healthpacks_group.empty()
+                self.manager.healthpacks_timer = 0
+
+                pygame.mixer.music.load("sounds/happy_adventure.mp3")
+                pygame.mixer.music.set_volume(0.6)
+                pygame.mixer.music.play(-1)
 
                 player = self.manager.player_group.sprite
 
                 if player:
                     player.HP = default_HP
+                    player.rect.center = default_starting_position
                 self.manager.change_state(MenuState(self.manager))
 
     def update(self) -> None:
