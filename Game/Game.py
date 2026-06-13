@@ -29,7 +29,6 @@ class Game:
         # Grupy sprite'ow do zarzadzania pociskami i przeciwnikami
         self.bullets_group: pygame.sprite.Group = pygame.sprite.Group()
         self.enemies_group: pygame.sprite.Group = pygame.sprite.Group()
-        self.enemies_max_count: int = 10
 
         # Tworzenie gracza i dodanie go do grupy pojedynczego sprite'a
         self.player_group: pygame.sprite.GroupSingle = pygame.sprite.GroupSingle()
