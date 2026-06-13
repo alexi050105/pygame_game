@@ -1,4 +1,5 @@
 # Plik: Game.py
+import pygame.mixer
 from Parameters.Imports import *
 from Entities.Player import Player
 from States.MenuState import MenuState
@@ -10,6 +11,7 @@ class Game:
         # Inicjalizacja pygame i modulu wyswietlania
         pygame.init()
         pygame.display.init()
+        pygame.mixer.init()
 
         pygame.display.set_caption('Beware of the WOLVES')
 
