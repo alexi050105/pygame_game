@@ -1,0 +1,7 @@
+Lib/
+Scripts/
+include/
+__pycache__/
+.pytest_cache/
+.idea/
+*.pyc
