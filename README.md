@@ -37,6 +37,18 @@ docker build -t pygame_game .
 xhost +local:docker
 docker run -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix pygame_game
 
+### Problemy z dzwiekiem na Linux / Debian
+
+Jesli wystapi blad z mixerem audio, zainstaluj pulseaudio i uruchom:
+
+sudo apt-get install -y libasound2-dev pulseaudio
+pulseaudio --start
+SDL_AUDIODRIVER=pulseaudio python3 main.py
+
+Lub jesli dzwiek nie jest potrzebny:
+
+SDL_AUDIODRIVER=dummy python3 main.py
+
 ### Windows
 1. Pobierz i zainstaluj Docker Desktop z docker.com/products/docker-desktop
 2. Pobierz i uruchom VcXsrv z opcja "Disable access control"
