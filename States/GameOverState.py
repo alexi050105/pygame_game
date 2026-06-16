@@ -6,34 +6,49 @@ from States.GameState import GameState
 class GameOverState(GameState):
 
     def __init__(self, manager: "Game") -> None:
-        # Inicjalizacja klasy bazowej GameState
         super().__init__(manager)
 
-        # Odtworzenie dzwieku game over i zatrzymanie muzyki w tle
         import Parameters.Imports as assets
         assets.SOUNDS["game_over"].play()
         pygame.mixer.music.stop()
 
-        # Czcionki do wyswietlania tekstu na ekranie game over
-        FONT = pygame.font.Font(default_font, default_font_size)
-        FONT_SMALL = pygame.font.Font(default_font, default_font_size_small)
+        FONT = pygame.font.Font(assets.resource_path(default_font), default_font_size)
+        FONT_SMALL = pygame.font.Font(assets.resource_path(default_font), default_font_size_small)
 
-        # Glowny napis GAME OVER wyswietlany na srodku ekranu
         self.title_surf = FONT.render("GAME OVER", False, "Red")
         self.title_rect = self.title_surf.get_rect(
-            center=(default_width / 2, default_height / 2)
+            center=(default_width / 2, default_height / 2 - 60)
         )
 
-        # Informacja o numerze fali na ktorej zakonczyla sie gra
         self.into_surf = FONT_SMALL.render(f"You've reached wave: {self.manager.current_wave}", False, "White")
         self.into_rect = self.into_surf.get_rect(
-            center=(default_width / 2, default_height / 2 + 30)
+            center=(default_width / 2, default_height / 2 - 10)
         )
 
-        # Podpowiedz jak wrocic do menu
+        # Nazwa wybranego poziomu trudnosci
+        difficulty_names = ["EASY", "NORMAL", "HARD"]
+        difficulty_name = difficulty_names[self.manager.difficulty_index]
+        self.difficulty_surf = FONT_SMALL.render(f"Difficulty: {difficulty_name}", False, "Gray")
+        self.difficulty_rect = self.difficulty_surf.get_rect(
+            center=(default_width / 2, default_height / 2 + 25)
+        )
+
+        # Startowe HP gracza
+        self.starting_hp_surf = FONT_SMALL.render(f"Starting HP: {self.manager.setup_player_hp}", False, "Gray")
+        self.starting_hp_rect = self.starting_hp_surf.get_rect(
+            center=(default_width / 2, default_height / 2 + 55)
+        )
+
+        # Startowa liczba przeciwnikow
+        self.starting_enemies_surf = FONT_SMALL.render(f"Starting enemies: {self.manager.setup_enemies_count}", False,
+                                                       "Gray")
+        self.starting_enemies_rect = self.starting_enemies_surf.get_rect(
+            center=(default_width / 2, default_height / 2 + 85)
+        )
+
         self.hint_surf = FONT_SMALL.render("PRESS ESC TO TRY AGAIN", False, "Gray")
         self.hint_rect = self.hint_surf.get_rect(
-            center=(default_width / 2, default_height / 2 + 80)
+            center=(default_width / 2, default_height / 2 + 130)
         )
 
     def handle_event(self, events: List[pygame.event.Event]) -> None:
@@ -61,7 +76,7 @@ class GameOverState(GameState):
                 # Reset pozycji i HP gracza do wartosci poczatkowych
                 player = self.manager.player_group.sprite
                 if player:
-                    player.HP = default_HP
+                    player.HP = player.max_HP  # <- zamiast default_HP
                     player.rect.center = default_starting_position
 
                 # Przejscie do menu glownego
@@ -71,10 +86,10 @@ class GameOverState(GameState):
         pass
 
     def draw(self) -> None:
-        # Wypelnienie ekranu czarnym tlem
         self.manager.screen.fill("Black")
-
-        # Rysowanie napisow na ekranie game over
         self.manager.screen.blit(self.title_surf, self.title_rect)
         self.manager.screen.blit(self.into_surf, self.into_rect)
+        self.manager.screen.blit(self.difficulty_surf, self.difficulty_rect)
+        self.manager.screen.blit(self.starting_hp_surf, self.starting_hp_rect)
+        self.manager.screen.blit(self.starting_enemies_surf, self.starting_enemies_rect)
         self.manager.screen.blit(self.hint_surf, self.hint_rect)

@@ -5,8 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d6245e8-d07b-446f-9eb0-13bdbc832921" name="Changes" comment="main">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Entities/Person.py" beforeDir="false" afterPath="$PROJECT_DIR$/Entities/Person.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Entities/Player.py" beforeDir="false" afterPath="$PROJECT_DIR$/Entities/Player.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game/Game.py" beforeDir="false" afterPath="$PROJECT_DIR$/Game/Game.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Parameters/DefaultParameters.py" beforeDir="false" afterPath="$PROJECT_DIR$/Parameters/DefaultParameters.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/States/GamePlayState.py" beforeDir="false" afterPath="$PROJECT_DIR$/States/GamePlayState.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,12 +41,13 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/aleks/PycharmProjects/gameProject/sounds&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/aleks/PycharmProjects/gameProject/gameplayScreenshots&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\aleks\PycharmProjects\gameProject\gameplayScreenshots" />
       <recent name="C:\Users\aleks\PycharmProjects\gameProject\sounds" />
       <recent name="C:\Users\aleks\PycharmProjects\gameProject\graphics" />
       <recent name="C:\Users\aleks\PycharmProjects\gameProject\fonts" />

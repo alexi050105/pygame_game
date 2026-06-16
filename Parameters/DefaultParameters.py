@@ -20,6 +20,43 @@ default_hud_background_width = 220
 default_hud_background_height = 80
 default_hud_background_alpha = 150
 
+# Limity do regulacji w GameSetupState
+min_player_hp = 50
+max_player_hp = 200
+hp_step = 10
+
+min_starting_enemies = 1
+max_starting_enemies = 10
+enemies_step = 1
+
+default_music_volume = 0.4
+default_sfx_volume = 0.5
+default_volume_step = 0.1
+
+# Trudnosc
+
+default_kills_per_enemy_slot = 2  # ile razy trzeba "wymienic" cala grupe wrogow
+
+difficulty_easy_enemies_multiplier = 0.6
+difficulty_normal_enemies_multiplier = 1.0
+difficulty_hard_enemies_multiplier = 1.6
+
+difficulty_easy_healthpack_multiplier = 1.5   # apteczki czesciej
+difficulty_normal_healthpack_multiplier = 1.0
+difficulty_hard_healthpack_multiplier = 0.6   # apteczki rzadziej
+
+difficulty_easy_decorator_multiplier = 0.5    # mniej Fast/Armored
+difficulty_normal_decorator_multiplier = 1.0
+difficulty_hard_decorator_multiplier = 1.8    # wiecej Fast/Armored
+
+min_player_hp = 50
+max_player_hp = 200
+hp_step = 10
+
+min_starting_enemies = 1
+max_starting_enemies = 10
+enemies_step = 1
+
 # Fale
 default_starting_wave = 1
 default_starting_kills = 0
@@ -45,8 +82,8 @@ default_hud_bar_height = 18
 
 # Dzwieki
 default_volume_shoot = 0.3
-default_volume_explosion = 0.5
-default_volume_hit = 0.5
+default_volume_explosion = 0.2
+default_volume_hit = 0.3
 default_volume_wave = 0.7
 default_volume_healthpack = 0.6
 default_volume_player_hurt = 0.5

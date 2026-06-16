@@ -17,7 +17,7 @@ class WaveTransitionState(GameState):
         self.timer: int = default_fps * 2
 
         # Inicjalizacja czcionki oraz wyrenderowanie tekstu z numerem fali
-        FONT = pygame.font.Font(default_font, default_font_size)
+        FONT = pygame.font.Font(assets.resource_path(default_font), default_font_size)
         self.text_surf = FONT.render(f"Wave {wave_number}!", False, "White")
 
         # Wycentrowanie tekstu na srodku ekranu gry

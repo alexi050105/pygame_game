@@ -1,4 +1,5 @@
 # Plik: Game.py
+import sys
 import pygame.mixer
 from Parameters.Imports import *
 from Entities.Player import Player
@@ -8,7 +9,7 @@ from States.GameState import GameState
 
 class Game:
     def __init__(self) -> None:
-        # Inicjalizacja pygame i modulu wyswietlania
+        # Inicjalizacja pygame i modulu wyswietlania i dzwieku
         pygame.init()
         pygame.display.init()
         pygame.mixer.init()
@@ -24,9 +25,12 @@ class Game:
         load_all_game_sounds()
 
         # Zaladowanie i odtworzenie muzyki w tle w petli (-1 oznacza nieskonczone zapetlenie)
-        pygame.mixer.music.load("sounds/happy_adventure.mp3")
+        pygame.mixer.music.load(resource_path("sounds/happy_adventure.mp3"))
         pygame.mixer.music.set_volume(0.6)
         pygame.mixer.music.play(-1)
+
+        self.music_volume: float = default_music_volume
+        self.sfx_volume: float = default_sfx_volume
 
         # Grupy sprite'ow do zarzadzania pociskami i przeciwnikami
         self.bullets_group: pygame.sprite.Group = pygame.sprite.Group()
@@ -49,6 +53,15 @@ class Game:
         self.kills_in_wave: int = 0
         self.enemies_to_kill: int = 5
         self.enemies_max_count: int = 3
+
+        self.enemies_count_multiplier: float = difficulty_normal_enemies_multiplier
+        self.healthpack_interval_multiplier: float = difficulty_normal_healthpack_multiplier
+        self.decorator_chance_multiplier: float = difficulty_normal_decorator_multiplier
+
+        self.difficulty_index: int = 1  # 0=easy, 1=normal, 2=hard
+        self.difficulty_multiplier: float = difficulty_normal_enemies_multiplier
+        self.setup_player_hp: int = default_HP
+        self.setup_enemies_count: int = 3
 
         # Zegar do kontrolowania liczby klatek na sekunde
         self.clock: pygame.time.Clock = pygame.time.Clock()
@@ -78,7 +91,7 @@ class Game:
 
         # Zatrzymanie pygame i wyjscie z programu po zakonczeniu petli
         pygame.quit()
-        quit()
+        sys.exit()
 
     def change_state(self, state: GameState) -> None:
         # Zmiana aktualnego stanu gry - realizacja wzorca Stan

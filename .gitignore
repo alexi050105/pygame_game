@@ -1,4 +1,4 @@
-# Środowisko wirtualne
+# Srodowisko wirtualne
 Lib/
 Scripts/
 include/
@@ -14,3 +14,12 @@ __pycache__/
 
 # Pytest
 .pytest_cache/
+
+# Build exe
+dist/
+build/
+*.spec
+*.exe
+
+# Zapis gry (dane uzytkownika)
+savegame.json

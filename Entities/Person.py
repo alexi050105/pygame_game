@@ -4,26 +4,24 @@ from Parameters.Imports import *
 
 class Person(pygame.sprite.Sprite, ABC):
     def __init__(self, name: str, HP: int, starting_position: Tuple[float, float], damage: int, speed: int) -> None:
-        # Inicjalizacja klasy bazowej pygame.sprite.Sprite
         super().__init__()
-
-        # Przypisanie nazwy postaci
         self.name: str = name
-
-        # Walidacja HP - jesli podano nieprawidlowa wartosc, ustawiamy domyslna
         self.HP: int = HP if HP > 0 else default_HP
-
-        # Walidacja predkosci - predkosc nie moze byc ujemna
+        self.max_HP: int = self.HP  # <- zapamietaj maksymalne HP w momencie tworzenia
         self.speed: int = speed if speed >= 0 else default_player_speed
-
-        # Walidacja obrazen - obrazenia nie moga byc ujemne
         self.damage: int = damage if damage >= 0 else default_damage
 
         # Walidacja pozycji startowej - jesli pozycja jest poza mapa, ustawiamy srodek
-        start_x = default_width / 2 if (starting_position[0] < -default_out_of_bounds or starting_position[
-            0] > default_width + default_out_of_bounds) else starting_position[0]
-        start_y = default_height / 2 if (starting_position[1] < -default_out_of_bounds or starting_position[
-            1] > default_height + default_out_of_bounds) else starting_position[1]
+        start_x = default_width / 2 \
+            if (starting_position[0] < -default_out_of_bounds
+                or starting_position[0] > default_width + default_out_of_bounds) \
+            else starting_position[0]
+
+        start_y = default_height / 2 \
+            if (starting_position[1] < -default_out_of_bounds
+                or starting_position[1] > default_height + default_out_of_bounds) \
+            else starting_position[1]
+
         self.starting_position: Tuple[float, float] = (start_x, start_y)
 
         # Domyslnie postac jest zwrocona w prawo

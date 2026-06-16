@@ -13,10 +13,14 @@ class Player(Person):
         self.image: pygame.Surface = PLAYER_SPRITES["right"]
 
         # Walidacja pozycji startowej - jesli poza mapa, ustawiamy srodek ekranu
-        start_x = default_width / 2 if (starting_position[0] < -default_out_of_bounds or starting_position[
-            0] > default_width + default_out_of_bounds) else starting_position[0]
-        start_y = default_height / 2 if (starting_position[1] < -default_out_of_bounds or starting_position[
-            1] > default_height + default_out_of_bounds) else starting_position[1]
+        start_x = default_width / 2 \
+            if (starting_position[0] < -default_out_of_bounds
+                or starting_position[0] > default_width + default_out_of_bounds) \
+            else starting_position[0]
+        start_y = default_height / 2 \
+            if (starting_position[1] < -default_out_of_bounds
+                or starting_position[1] > default_height + default_out_of_bounds) \
+            else starting_position[1]
         self.starting_position = (start_x, start_y)
 
         # Ustawienie prostokata kolizji na podstawie sprite'a i pozycji startowej

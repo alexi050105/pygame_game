@@ -13,45 +13,50 @@ if TYPE_CHECKING:
 
 class GamePlayState(GameState):
     def __init__(self, manager: "Game") -> None:
-        # Inicjalizacja klasy bazowej GameState
         super().__init__(manager)
 
-        # Referencje do ekranu i grup sprite'ow z obiektu Game
         self.screen: pygame.Surface = self.manager.screen
         self.player_group: pygame.sprite.GroupSingle = self.manager.player_group
         self.bullets_group: pygame.sprite.Group = self.manager.bullets_group
         self.enemies_group: pygame.sprite.Group = self.manager.enemies_group
         self.enemies_max_count: int = self.manager.enemies_max_count
-
-        # Referencja do grupy apteczek
         self.healthpacks_group: pygame.sprite.Group = self.manager.healthpacks_group
 
+        # Komunikat wyswietlany po zapisie/wczytaniu gry
+        self.notification_text: str = ""
+        self.notification_timer: int = 0
+
     def handle_event(self, events: List[pygame.event.Event]) -> None:
+        from States.PauseState import PauseState
+        from Game.SaveManager import SaveManager
+
         for event in events:
-            # Wcisniecie ESC powoduje powrot do menu
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                self.manager.change_state(MenuState(self.manager))
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.manager.change_state(PauseState(self.manager))
+                elif event.key == pygame.K_F5:
+                    success = SaveManager.save_game(self.manager)
+                    self.notification_text = "GAME SAVED" if success else "SAVE ERROR"
+                    self.notification_timer = default_fps * 2  # 2 sekundy
+                elif event.key == pygame.K_F9:
+                    success = SaveManager.load_game(self.manager)
+                    self.notification_text = "GAME LOADED" if success else "NO SAVE"
+                    self.notification_timer = default_fps * 2
 
     def update(self) -> None:
-        # Aktualizacja gracza - ruch i strzelanie
         self.player_group.update()
-
-        # Spawning przeciwnikow i apteczek
         self.__spawn_enemies()
         self.__spawn_healthpacks()
-
-        # Ruch przeciwnikow z uwzglednieniem kolizji miedzy nimi
         self.move_and_check_enemy_collisions()
-
-        # Aktualizacja wszystkich grup sprite'ow
         self.healthpacks_group.update()
         self.enemies_group.update()
         self.bullets_group.update()
-
-        # Sprawdzanie kolizji miedzy obiektami
         self.__player_healthpack_collide()
         self.__enemy_bullet_collide()
         self.__enemy_player_collide()
+
+        if self.notification_timer > 0:
+            self.notification_timer -= 1
 
     def move_and_check_enemy_collisions(self) -> None:
         enemies = list(self.enemies_group)
@@ -111,6 +116,7 @@ class GamePlayState(GameState):
         hits = pygame.sprite.groupcollide(
             self.bullets_group, self.enemies_group, True, False
         )
+
         for bullet, enemies_hit in hits.items():
             for enemy in enemies_hit:
                 if isinstance(enemy, ArmoredEnemy):
@@ -132,34 +138,36 @@ class GamePlayState(GameState):
         if self.manager.kills_in_wave >= self.manager.enemies_to_kill:
             self.manager.kills_in_wave = 0
             self.manager.current_wave += 1
-            self.manager.enemies_to_kill = default_starting_enemies_to_kill + self.manager.current_wave * default_wave_kills_increment
-            self.manager.enemies_max_count = default_starting_enemies_max_count + self.manager.current_wave
+
+            self.manager.enemies_max_count = int(
+                (default_starting_enemies_max_count + self.manager.current_wave) * self.manager.enemies_count_multiplier
+            )
+            # enemies_to_kill rosnie proporcjonalnie do nowego enemies_max_count
+            self.manager.enemies_to_kill = self.manager.enemies_max_count * default_kills_per_enemy_slot
+
             self.manager.change_state(
                 WaveTransitionState(self.manager, self.manager.current_wave)
             )
 
     def __spawn_enemies(self) -> None:
-        # Spawning tylko gdy liczba przeciwnikow jest ponizej maksimum
         if len(self.enemies_group) < self.enemies_max_count:
             pos = self.__choose_enemy_pos()
             if not self.player_group.sprite:
                 return
 
             wave = self.manager.current_wave
-
-            # Tworzenie bazowego przeciwnika z HP i predkoscia zalezna od fali
             base = Enemy(
-                "Enemy", default_HP + wave * 20,
+                "Enemy", default_HP,
                 pos, default_damage,
                 default_enemy_speed,
                 self.player_group.sprite
             )
 
-            # Losowe przypisanie dekoratorow w zaleznosci od numeru fali
+            dec_mult = self.manager.decorator_chance_multiplier
             enemy = base
-            if wave >= default_armored_enemy_min_wave and random.random() < default_armored_enemy_chance:
+            if wave >= default_armored_enemy_min_wave and random.random() < default_armored_enemy_chance * dec_mult:
                 enemy = ArmoredEnemy(enemy)
-            if wave >= default_fast_enemy_min_wave and random.random() < default_fast_enemy_chance:
+            if wave >= default_fast_enemy_min_wave and random.random() < default_fast_enemy_chance * dec_mult:
                 enemy = FastEnemy(enemy)
 
             self.enemies_group.add(enemy)
@@ -198,11 +206,10 @@ class GamePlayState(GameState):
         return (position_x, position_y)
 
     def __spawn_healthpacks(self) -> None:
-        # Zwiekszanie timera co klatke
         self.manager.healthpacks_timer += 1
+        effective_interval = self.manager.healthpacks_interval / self.manager.healthpack_interval_multiplier
 
-        # Spawning apteczki gdy timer osiagnie wartosc interwalu
-        if self.manager.healthpacks_timer >= self.manager.healthpacks_interval:
+        if self.manager.healthpacks_timer >= effective_interval:
             self.manager.healthpacks_timer = 0
             pos = (
                 random.randint(50, default_width - 50),
@@ -212,60 +219,81 @@ class GamePlayState(GameState):
 
     def __player_healthpack_collide(self) -> None:
         import Parameters.Imports as assets
-
         player = self.player_group.sprite
         if not player:
             return
-
-        # Zebranie apteczki przez gracza - przywrocenie HP z limitem do maksimum
         collected = pygame.sprite.spritecollide(player, self.healthpacks_group, True)
         for pack in collected:
-            player.HP = min(default_HP, player.HP + pack.heal_amount)
+            player.HP = min(player.max_HP, player.HP + pack.heal_amount)  # <- zamiast default_HP
             assets.SOUNDS["healthpack"].play()
 
     def draw(self) -> None:
-        # Rysowanie tla mapy
         self.screen.blit(BACKGROUND, (0, 0))
-
-        # Rysowanie apteczek pod pozostalymi sprite'ami
         self.healthpacks_group.draw(self.screen)
-
-        # Rysowanie gracza, pociskow i przeciwnikow
         self.player_group.draw(self.screen)
         self.bullets_group.draw(self.screen)
         self.enemies_group.draw(self.screen)
-
-        # Rysowanie interfejsu gracza na wierzchu
         self.__draw_hud()
+        self.__draw_notification()
+
+    def __draw_notification(self) -> None:
+        import Parameters.Imports as assets
+
+        if self.notification_timer <= 0:
+            return
+
+        font = pygame.font.Font(assets.resource_path(default_font), default_font_size_small)
+        notif_surf = font.render(self.notification_text, False, "Yellow")
+        notif_rect = notif_surf.get_rect(center=(default_width / 2, 60))
+
+        bg_surf = pygame.Surface((notif_rect.width + 20, notif_rect.height + 10), pygame.SRCALPHA)
+        bg_surf.fill((0, 0, 0, 180))
+        bg_rect = bg_surf.get_rect(center=notif_rect.center)
+        self.screen.blit(bg_surf, bg_rect)
+        self.screen.blit(notif_surf, notif_rect)
+
 
     def __draw_hud(self) -> None:
         player = self.player_group.sprite
         if not player:
             return
 
-        # Rysowanie polprzezroczystego tla pod elementami HUD
+        import Parameters.Imports as assets
+
+        # Tlo HUD HP/Wave
         hud_rect = pygame.Rect(5, 5, 220, 80)
         hud_surface = pygame.Surface((hud_rect.width, hud_rect.height), pygame.SRCALPHA)
         hud_surface.fill((0, 0, 0, default_hud_background_alpha))
         self.screen.blit(hud_surface, (hud_rect.x, hud_rect.y))
         pygame.draw.rect(self.screen, "White", hud_rect, 2)
 
-        # Rysowanie paska HP - czerwone tlo, zielone wypelnienie proporcjonalne do HP
         bar_x, bar_y, bar_w, bar_h = default_hud_bar_x, default_hud_bar_y, default_hud_bar_width, default_hud_bar_height
-        ratio = max(0, player.HP / default_HP)
+        ratio = max(0, player.HP / player.max_HP)
         pygame.draw.rect(self.screen, "DarkRed", (bar_x, bar_y, bar_w, bar_h))
         pygame.draw.rect(self.screen, "Green", (bar_x, bar_y, int(bar_w * ratio), bar_h))
         pygame.draw.rect(self.screen, "White", (bar_x, bar_y, bar_w, bar_h), 2)
 
-        # Wyswietlanie wartosci HP gracza pod paskiem
-        font = pygame.font.Font(default_font, default_font_size_hud)
-        hp_surf = font.render(f"HP: {max(0, player.HP)}", False, "White")
+
+        font = pygame.font.Font(assets.resource_path(default_font), default_font_size_hud)
+        hp_surf = font.render(f"HP: {max(0, player.HP)}/{player.max_HP}", False, "White")
         self.screen.blit(hp_surf, (bar_x, bar_y + 22))
 
-        # Wyswietlanie numeru fali i postępu zabic nad paskiem HP
         wave_surf = font.render(
             f"Wave: {self.manager.current_wave} "
             f"({self.manager.kills_in_wave}/{self.manager.enemies_to_kill})",
             False, "White"
         )
         self.screen.blit(wave_surf, (default_hud_bar_x, default_hud_bar_y - 22))
+
+        # Tlo HUD pod podpowiedziami zapisu/wczytania
+        save_hud_rect = pygame.Rect(default_width - 170, 5, 165, 60)
+        save_hud_surface = pygame.Surface((save_hud_rect.width, save_hud_rect.height), pygame.SRCALPHA)
+        save_hud_surface.fill((0, 0, 0, default_hud_background_alpha))
+        self.screen.blit(save_hud_surface, (save_hud_rect.x, save_hud_rect.y))
+        pygame.draw.rect(self.screen, "White", save_hud_rect, 2)
+
+        save_hint_surf = font.render("F5 = SAVE", False, "White")
+        self.screen.blit(save_hint_surf, (default_width - 160, 15))
+
+        load_hint_surf = font.render("F9 = LOAD", False, "White")
+        self.screen.blit(load_hint_surf, (default_width - 160, 37))
